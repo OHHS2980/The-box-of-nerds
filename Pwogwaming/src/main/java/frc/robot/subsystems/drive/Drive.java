@@ -50,7 +50,7 @@ public class Drive extends SubsystemBase {
 
     private final Module frontLeft, frontRight, rearLeft, rearRight;
     private final Module[] swerveModules;
-
+    private final GyroIO gyroIO;
 
     frontLeft = new Module(
             new ModuleIOKraken(
@@ -95,6 +95,8 @@ public class Drive extends SubsystemBase {
             rearRight
         };
 
-
+    public Drive(GyroIO gyroIO) {
+        this.gyroIO = gyroIO;
+    }
 
 }
