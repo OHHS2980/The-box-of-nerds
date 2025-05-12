@@ -26,7 +26,9 @@ private final ModuleIO io;
     private final int index;
 
 
- 
+    public double[] getOdometryTimestamps() {
+        return inputs.odometryTimestamps;
+    }
 
     public Module(ModuleIO io, int index, double chassisAngularOffset) {
         this.io = io;

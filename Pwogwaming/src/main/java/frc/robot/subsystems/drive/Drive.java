@@ -95,8 +95,55 @@ public class Drive extends SubsystemBase {
             rearRight
         };
 
+
+    public Module[] modules = new Module[];
+
     public Drive(GyroIO gyroIO) {
         this.gyroIO = gyroIO;
+        
+    }
+    
+    
+    public void periodic() {
+        gyroIO.updateInputs();
+    }
+
+    
+    private void updateOdometry() {
+        double[] sampleTimestamps =
+        modules[0].getOdometryTimestamps(); // All signals are sampled together
+
+        
+        int sampleCount = sampleTimestamps.length;
+        for (int i = 0; i < sampleCount; i++) {
+        // Read wheel positions and deltas from each module
+        SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
+        SwerveModulePosition[] moduleDeltas = new SwerveModulePosition[4];
+        for (int moduleIndex = 0; moduleIndex < 4; moduleIndex++) {
+            modulePositions[moduleIndex] = modules[moduleIndex].getOdometryPositions()[i];
+
+            moduleDeltas[moduleIndex] =
+                new SwerveModulePosition(
+                    modulePositions[moduleIndex].distanceMeters
+                        - lastModulePositions[moduleIndex].distanceMeters,
+                    modulePositions[moduleIndex].angle);
+            lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
+        }
+
+        // Update gyro angle
+        if (gyroInputs.connected) {
+            // Use the real gyro angle
+            rawGyroRotation = gyroInputs.odometryYawPositions[i];
+        } else {
+            // Use the angle delta from the kinematics and module deltas
+            Twist2d twist = kinematics.toTwist2d(moduleDeltas);
+            rawGyroRotation = rawGyroRotation.plus(new Rotation2d(twist.dtheta));
+        }
+
+        RobotState.getInstance()
+            .addOdometryObservation(
+                new OdometryObservation(modulePositions, rawGyroRotation, sampleTimestamps[i]));
+        }
     }
 
 }
