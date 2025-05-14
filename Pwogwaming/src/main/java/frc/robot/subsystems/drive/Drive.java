@@ -101,13 +101,22 @@ public class Drive extends SubsystemBase {
         this.gyroIO = gyroIO;
         
         
-
+        SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+        m_kinematics, gyroIO.getRotation2d(),
+        new SwerveModulePosition[] {
+            m_frontLeftModule.getPosition(),
+            m_frontRightModule.getPosition(),
+            m_backLeftModule.getPosition(),
+            m_backRightModule.getPosition()
+        }, new Pose2d(5.0, 13.5, new Rotation2d()));
     }
     
     
     public void periodic() {
         gyroIO.updateInputs();
     }
+
+
 
     
     private void updateOdometry() {

@@ -26,5 +26,9 @@ public interface GyroIO {
     public Rotation2d[] odometryYawPositions = new Rotation2d[] {};
   }
 
+  public default Rotation2d getRotation2d(GyroIOInputs inputs) {
+    return inputs.yawPosition;
+  }
+
   public default void updateInputs(GyroIOInputs inputs) {}
 }
