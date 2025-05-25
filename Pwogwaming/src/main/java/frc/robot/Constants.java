@@ -20,4 +20,26 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static Mode getMode() {
+    return switch (robotType) {
+      case DEVBOT, COMPBOT -> RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+      case SIMBOT -> Mode.SIM;
+    };
+  }
+
+  public enum Mode {
+    REAL,
+
+    SIM,
+
+    //replay from log file
+    REPLAY
+  }
+
+  public enum RobotType {
+    SIMBOT, // sim mode
+    DEVBOT, //real mode or replay mode
+    COMPBOT //real mode or replay mode
+  }
+
 }

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  Drive drive;
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -60,4 +61,33 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
   }
+
+ private void setupSubsystems() {
+    if (Constants.getMode() != Mode.REPLAY) { //if mode is real or simulation
+      switch (Constants.getRobot()) {
+        case COMPBOT: 
+          
+          drive = new Drive(new GyroIO)
+
+        case SIMBOT:
+
+        default:
+
+          break;
+      }
+    }
+
+    // No-op implementations for replay
+    if (drive == null) {
+      drive =
+          new Drive(
+              new GyroIO() {},
+              new ModuleIO() {},
+              new ModuleIO() {},
+              new ModuleIO() {},
+              new ModuleIO() {});
+    }
+  }
+
+
 }
