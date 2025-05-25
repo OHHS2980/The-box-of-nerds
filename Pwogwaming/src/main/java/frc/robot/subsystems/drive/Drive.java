@@ -100,26 +100,9 @@ public class Drive extends SubsystemBase {
     public Drive(GyroIO gyroIO) {
         this.gyroIO = gyroIO;
         
-        
-        // Locations for the swerve drive modules relative to the robot center.
-        Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
-        Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
-        Translation2d m_rearLeftLocation = new Translation2d(-0.381, 0.381);
-        Translation2d m_rearRightLocation = new Translation2d(-0.381, -0.381);
-        // Creating my kinematics object using the module locations
-        SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-        m_frontLeftLocation, m_frontRightLocation, m_rearLeftLocation, m_rearRightLocation
-        );
+        //start it
+        PhoenixOdometryThread.getInstance().start();
 
-        SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-        m_kinematics, gyroIO.getRotation2d(),
-        new SwerveModulePosition[] {
-            frontLeft.getPosition(),
-            frontRight.getPosition(),
-            rearLeft.getPosition(),
-            rearRight.getPosition()
-        }, new Pose2d(5.0, 13.5, new Rotation2d()));
-        
     }
     
     
