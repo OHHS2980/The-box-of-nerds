@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.drive.module.ModuleIOKraken;
+import frc.robot.subsystems.drive.module.GyroIO;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -115,53 +117,24 @@ public class RobotContainer {
             rearRight
           };
 
-          drive = new Drive(new GyroIO, swerveModules);
+          drive = new Drive(new GyroIO(), swerveModules);
 
         case SIMBOT:
 
-          frontLeft = new Module(
+          simulationVisualizer = new SimulationVisualizer()
+
+          swerveModules = new Module[] {};
+
+          for (moduleIndex = 0, moduleIndex < 3, moduleIndex++) {
+            simModule = new Module(
             new ModuleIOMaple(
-                DriveConstants.FRONT_LEFT_DRIVING_CAN_ID,
-                DriveConstants.FRONT_LEFT_TURNING_CAN_ID,
-                DriveConstants.FRONT_LEFT_CANCODER_CAN_ID,
-                DriveConstants.FRONT_LEFT_TURN_ENCODER_OFFSET),
-            DriveConstants.FRONT_LEFT_INDEX,
-            DriveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET);
+              SimulationVisualizer.getInstance().getSwerveModuleSimulation(moduleIndex)),
+            );
+            swerveModules[moduleIndex] = simModule;
+          }
+      
 
-          frontRight = new Module(
-            new ModuleIOKraken(
-                DriveConstants.FRONT_RIGHT_DRIVING_CAN_ID,
-                DriveConstants.FRONT_RIGHT_TURNING_CAN_ID,
-                DriveConstants.FRONT_RIGHT_CANCODER_CAN_ID,
-                DriveConstants.FRONT_RIGHT_TURN_ENCODER_OFFSET),
-            DriveConstants.FRONT_RIGHT_INDEX,
-            DriveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET);
-
-          rearLeft = new Module(
-            new ModuleIOKraken(
-                DriveConstants.REAR_LEFT_DRIVING_CAN_ID,
-                DriveConstants.REAR_LEFT_TURNING_CAN_ID,
-                DriveConstants.REAR_LEFT_CANCODER_CAN_ID,
-                DriveConstants.REAR_LEFT_TURN_ENCODER_OFFSET),
-            DriveConstants.REAR_LEFT_INDEX,
-            DriveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET);
-
-          rearRight = new Module(
-            new ModuleIOKraken(
-                DriveConstants.REAR_RIGHT_DRIVING_CAN_ID,
-                DriveConstants.REAR_RIGHT_TURNING_CAN_ID,
-                DriveConstants.REAR_RIGHT_CANCODER_CAN_ID,
-                DriveConstants.REAR_RIGHT_TURN_ENCODER_OFFSET),
-            DriveConstants.REAR_RIGHT_INDEX,
-            DriveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET);     
-
-          swerveModules = new Module[] {
-            frontLeft,
-            frontRight,
-            rearLeft,
-            rearRight
-          };
-
+          drive = new Drive(new GyroIO(), swerveModules);
 
         default:
 
