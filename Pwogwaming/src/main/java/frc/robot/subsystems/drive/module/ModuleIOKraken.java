@@ -46,7 +46,7 @@ import org.littletonrobotics.junction.Logger;
  *
  * <p>Device configuration and other behaviors not exposed by TunerConstants can be customized here.
  */
-public class ModuleIOComp implements ModuleIO {
+public class ModuleIOKraken implements ModuleIO {
   // Hardware objects
   private final TalonFX driveTalon;
   private final SparkBase turnSpark;
@@ -89,11 +89,11 @@ public class ModuleIOComp implements ModuleIO {
   private final Debouncer turnConnectedDebounce = new Debouncer(0.5);
   private int module;
 
-  public ModuleIOComp(int module) {
-    zeroRotation = getZeroRotation(module);
-    driveTalon = getDriveTalon(module);
-    turnSpark = getTurnSpark(module);
-    cancoder = getCancoder(module);
+  public ModuleIOKraken (int driveCANID, int turnCANID, int CANCoderCANID, int turnEncoderOffset, Rotation2d zeroRotation) {
+    zeroRotation = getZeroRotation(zeroRotation);
+    driveTalon = getDriveTalon(driveCANID);
+    turnSpark = getTurnSpark(turnCANID);
+    cancoder = getCancoder(CANCoderCANID);
     this.module = module;
 
     turnController = turnSpark.getClosedLoopController();
@@ -184,47 +184,26 @@ public class ModuleIOComp implements ModuleIO {
 
   private Rotation2d getZeroRotation(int module) {
     return switch (module) {
-      case 0 -> frontLeftZeroRotation;
-      case 1 -> frontRightZeroRotation;
-      case 2 -> backLeftZeroRotation;
-      case 3 -> backRightZeroRotation;
+      module,
       default -> new Rotation2d();
     };
   }
 
-  private TalonFX getDriveTalon(int module) {
+  private TalonFX getDriveTalon(int CanID) {
     return new TalonFX(
-        switch (module) {
-          case 0 -> frontLeftDriveCanId;
-          case 1 -> frontRightDriveCanId;
-          case 2 -> backLeftDriveCanId;
-          case 3 -> backRightDriveCanId;
-          default -> 0;
-        },
+        CanID,
         "canivore");
   }
 
-  private SparkMax getTurnSpark(int module) {
+  private SparkMax getTurnSpark(int CanID) {
     return new SparkMax(
-        switch (module) {
-          case 0 -> frontLeftTurnCanId;
-          case 1 -> frontRightTurnCanId;
-          case 2 -> backLeftTurnCanId;
-          case 3 -> backRightTurnCanId;
-          default -> 0;
-        },
+        CanID,
         MotorType.kBrushless);
   }
 
   private CANcoder getCancoder(int module) {
     return new CANcoder(
-        switch (module) {
-          case 0 -> frontLeftTurnEncoderCanId;
-          case 1 -> frontRightTurnEncoderCanId;
-          case 2 -> backLeftTurnEncoderCanId;
-          case 3 -> backRightTurnEncoderCanId;
-          default -> 0;
-        },
+        CanID,
         "canivore");
   }
 

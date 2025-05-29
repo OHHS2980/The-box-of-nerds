@@ -39,8 +39,8 @@ public class DriveConstants {
   // Zeroed rotation values for each module, see setup instructions
   public static final Rotation2d frontLeftZeroRotation = new Rotation2d(0.235);
   public static final Rotation2d frontRightZeroRotation = new Rotation2d(0.89 - Math.PI / 4);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(0.710);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(-3.112);
+  public static final Rotation2d rearLeftZeroRotation = new Rotation2d(0.710);
+  public static final Rotation2d rearRightZeroRotation = new Rotation2d(-3.112);
 
   public static final Matrix<N3, N1> odometryStateStdDevs =
       new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.003));
