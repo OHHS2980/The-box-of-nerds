@@ -62,6 +62,11 @@ public class Drive extends SubsystemBase {
         //start it up bruh
         PhoenixOdometryThread.getInstance().start();
 
+        
+    }
+    
+    
+    public void periodic() {
         odometryLock.lock(); // Prevents odometry updates while reading data
         gyroIO.updateInputs(gyroInputs);
         Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -85,11 +90,6 @@ public class Drive extends SubsystemBase {
 
         // Update gyro alert
         gyroDisconnectedAlert.set(!gyroInputs.connected);
-    }
-    
-    
-    public void periodic() {
-        gyroIO.updateInputs();
     }
 
     private void stopModules() {
