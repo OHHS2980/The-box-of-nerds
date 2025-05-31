@@ -125,14 +125,16 @@ public class RobotContainer {
 
           swerveModules = new Module[] {};
 
+// ts gurt. this friggin code makes 4 modules with simulated modules and puts them in swerveModules. 
+// which is then used to create a drive. heartwarming!
+
           for (moduleIndex = 0, moduleIndex < 3, moduleIndex++) {
             simModule = new Module(
             new ModuleIOMaple(
-              SimulationVisualizer.getInstance().getSwerveModuleSimulation(moduleIndex)),
+              simulationVisualizer.getInstance().getSwerveModuleSimulation(moduleIndex)),
             );
             swerveModules[moduleIndex] = simModule;
           }
-      
 
           drive = new Drive(new GyroIO(), swerveModules);
 

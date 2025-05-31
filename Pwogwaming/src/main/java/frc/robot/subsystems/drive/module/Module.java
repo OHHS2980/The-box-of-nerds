@@ -44,8 +44,8 @@ private final ModuleIO io;
 
     public void periodic(){
        
-       updateInputs();
-       
+        updateInputs();
+    
     }
 
     public void stop(){

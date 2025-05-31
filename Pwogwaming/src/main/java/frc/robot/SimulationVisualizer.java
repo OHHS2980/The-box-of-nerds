@@ -39,6 +39,8 @@ public class SimulationVisualizer {
 
   @Getter private IntakeSimulation intakeSim;
 
+  
+
   public static SimulationVisualizer getInstance() {
     if (instance == null) {
       instance = new SimulationVisualizer();

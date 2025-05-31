@@ -52,57 +52,39 @@ public class Drive extends SubsystemBase {
     private final Module[] swerveModules;
     private final GyroIO gyroIO;
 
-    frontLeft = new Module(
-            new ModuleIOKraken(
-                DriveConstants.FRONT_LEFT_DRIVING_CAN_ID,
-                DriveConstants.FRONT_LEFT_TURNING_CAN_ID,
-                DriveConstants.FRONT_LEFT_CANCODER_CAN_ID,
-                DriveConstants.FRONT_LEFT_TURN_ENCODER_OFFSET),
-            DriveConstants.FRONT_LEFT_INDEX,
-            DriveConstants.FRONT_LEFT_CHASSIS_ANGULAR_OFFSET);
-
-        frontRight = new Module(
-            new ModuleIOKraken(
-                DriveConstants.FRONT_RIGHT_DRIVING_CAN_ID,
-                DriveConstants.FRONT_RIGHT_TURNING_CAN_ID,
-                DriveConstants.FRONT_RIGHT_CANCODER_CAN_ID,
-                DriveConstants.FRONT_RIGHT_TURN_ENCODER_OFFSET),
-            DriveConstants.FRONT_RIGHT_INDEX,
-            DriveConstants.FRONT_RIGHT_CHASSIS_ANGULAR_OFFSET);
-
-        rearLeft = new Module(
-            new ModuleIOKraken(
-                DriveConstants.REAR_LEFT_DRIVING_CAN_ID,
-                DriveConstants.REAR_LEFT_TURNING_CAN_ID,
-                DriveConstants.REAR_LEFT_CANCODER_CAN_ID,
-                DriveConstants.REAR_LEFT_TURN_ENCODER_OFFSET),
-            DriveConstants.REAR_LEFT_INDEX,
-            DriveConstants.BACK_LEFT_CHASSIS_ANGULAR_OFFSET);
-
-        rearRight = new Module(
-            new ModuleIOKraken(
-                DriveConstants.REAR_RIGHT_DRIVING_CAN_ID,
-                DriveConstants.REAR_RIGHT_TURNING_CAN_ID,
-                DriveConstants.REAR_RIGHT_CANCODER_CAN_ID,
-                DriveConstants.REAR_RIGHT_TURN_ENCODER_OFFSET),
-            DriveConstants.REAR_RIGHT_INDEX,
-            DriveConstants.BACK_RIGHT_CHASSIS_ANGULAR_OFFSET);     
-
-        swerveModules = new Module[] {
-            frontLeft,
-            frontRight,
-            rearLeft,
-            rearRight
-        };
+   
 
 
 
-    public Drive(GyroIO gyroIO) {
+    public Drive(GyroIO gyroIO, Module[] swerveModules) {
         this.gyroIO = gyroIO;
-        
-        //start it
+        this.swerveModules = swerveModules;
+        //start it up bruh
         PhoenixOdometryThread.getInstance().start();
 
+        odometryLock.lock(); // Prevents odometry updates while reading data
+        gyroIO.updateInputs(gyroInputs);
+        Logger.processInputs("Drive/Gyro", gyroInputs);
+        for (var module : swerveModules) {
+            module.periodic();
+        }
+        odometryLock.unlock();
+
+            
+        // Stop moving when disabled
+        if (DriverStation.isDisabled()) {
+            stopModules();
+        }
+
+        // Log empty setpoint states when disabled
+        if (DriverStation.isDisabled()) {
+            logEmptySetpointStates();
+        }
+
+        updateOdometry();
+
+        // Update gyro alert
+        gyroDisconnectedAlert.set(!gyroInputs.connected);
     }
     
     
@@ -110,5 +92,10 @@ public class Drive extends SubsystemBase {
         gyroIO.updateInputs();
     }
 
+    private void stopModules() {
+    for (var module : swerveModules) {
+        module.stop();
+    }
+    }
 
 }
