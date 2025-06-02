@@ -37,7 +37,7 @@ public class GyroIONavX implements GyroIO {
     inputs.yawPosition = Rotation2d.fromDegrees(-navX.getAngle());
     inputs.yawVelocityRadPerSec = Units.degreesToRadians(-navX.getRawGyroZ());
 
-// Puts all your stuff into the Amazing conveyor belt.. turns it all into fun arrays... then Clears the queue so theres no old data
+  // Puts all your stuff into the Amazing conveyor belt.. turns it all into fun arrays... then Clears the queue so theres no old data
     inputs.odometryYawTimestamps =
         yawTimestampQueue.stream()
             .mapToDouble((Double value) -> value)
