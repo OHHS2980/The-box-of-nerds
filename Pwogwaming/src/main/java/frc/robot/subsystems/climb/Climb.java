@@ -1,6 +1,8 @@
 // one button run it press it againn break.
 
 package frc.robot.subsystems.climb;
+package frc.robot.Constants;
+
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,11 +14,18 @@ public class ClimbIntake extends SubsystemBase {
   private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();
 
   /** Creates a new Climb Notfunnel. */
-  public Climb(ClimbIO io) {
-    this.io = io;
+  public Climb() {
+    if (Constants.getMode() != Mode.REPLAY) { //if mode is real or simulation
+      switch (Constants.getRobot()) {
+        case COMPBOT: 
+          this.io = new ClimbIONeo();
+          break;
+        case SIMBOT:
+          this.io = new ClimbIOSim();
+      }
+    }
   }
 
-// comments for me , a Young blood in need of serious asylum
 // log code
   @Override
   public void periodic() {
@@ -24,8 +33,8 @@ public class ClimbIntake extends SubsystemBase {
     Logger.processInputs("Climb", inputs);
   }
 
-// move it forward?
-  public Command climbin() {
+// move it forward
+  public Command climbIn() {
     return Commands.run(
         () -> {
           io.setClimbVoltage(12);
@@ -34,7 +43,7 @@ public class ClimbIntake extends SubsystemBase {
   }
 
 // move it.................. Backwards
-  public Command climbout() {
+  public Command climbOut() {
     return Commands.run(
         () -> {
           io.setClimbVoltage(-10);
@@ -42,7 +51,6 @@ public class ClimbIntake extends SubsystemBase {
         this);
   }
 
-// Halt your moving
   public Command stop() {
     return Commands.runOnce(
         () -> {

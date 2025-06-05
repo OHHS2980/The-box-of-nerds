@@ -16,8 +16,8 @@ public class ClimbIOKraken implements ClimbIO {
   RelativeEncoder climbEncoder;
 
 // sets and defines motor, config, and encoder
-  public ClimbIOKraken() {
-    climbMotor = new SparkMax(30, MotorType.kBrushless);
+  public ClimbIONeo() {
+    climbMotor = new SparkMax(FrigginDeviceIdYo, MotorType.kBrushless);
     climbConfig = new SparkMaxConfig();
     climbMotor.configure(
         climbConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -26,6 +26,28 @@ public class ClimbIOKraken implements ClimbIO {
 
 // doesnt pass the value of the function. it passes Ts function not hte value.... HELP ME
 // note to self. this is called a supplier |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
+//                                         |
 //                                         |
 //                                         |
 //                                         V
