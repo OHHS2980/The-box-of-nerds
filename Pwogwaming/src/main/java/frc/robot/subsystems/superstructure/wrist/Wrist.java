@@ -9,20 +9,20 @@ public class Wrist extends ExampleSubsystem {
   public Wrist(WristIO io) {
     this.io = io;
 
-    // Switch constants based on mode (the physics simulator is treated as a
-    // separate robot with different tuning)
-    switch (Constants.getMode()) {
-      case REAL:
-      case REPLAY:
-        break;
-      case SIM:
-        this.io = new WristIOSim();
-        break;
-      default:
-        this.io = new WristIONeo();
-        break;
+
+  /** Creates a new */
+  public Wrist() {
+    if (Constants.getMode() != Mode.REPLAY) { //if mode is real or simulation
+      switch (Constants.getRobot()) {
+        case COMPBOT: 
+          this.io = new WristIONeo();
+          break;
+        case SIMBOT:
+          this.io = new WristIOSim();
+      }
     }
   }
+
 
   @Override
   public void periodic() {
@@ -40,17 +40,30 @@ public class Wrist extends ExampleSubsystem {
     }
   }
 
-  public void setGoal(ArmGoal goal) {
-    auto = true;
-    this.goal = goal;
+// log code
+  @Override
+  public void periodic() {
+    io.updateInputs(inputs);
+    Logger.processInputs("Wrist", inputs);
   }
 
-  public Rotation2d getArmAngle() {
-    return Rotation2d.fromRadians(inputs.armPositionRad);
+// i dont know what this will do. mystery
+  public Command wristIn() {
+    return Commands.run(
+        () -> {
+          io.setVoltage(12);
+        },
+        this);
   }
 
-  @AutoLogOutput(key = "Superstructure/Arm/AtGoal")
-  public boolean atGoal() {
-    return EqualsUtil.epsilonEquals(inputs.armPositionRad, goal.getRadians(), 1e-3);
+  public Command stop() {
+    return Commands.runOnce(
+        () -> {
+          io.setVoltage(0);
+        },
+        this);
   }
+
+}
+
 }

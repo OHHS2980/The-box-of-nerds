@@ -1,4 +1,3 @@
-package frc.robot.subsystems.algaeArm;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -9,17 +8,13 @@ public interface WristIO {
     public double armVelocityRadPerSec = 0;
     public double absoluteEncoderConnected = 0;
 
-    public double leftMotorAppliedVolts = 0;
-    public double leftMotorCurrentAmps = 0;
-    public double leftMotorTempC = 0;
-
-    public double rightMotorAppliedVolts = 0;
-    public double rightMotorCurrentAmps = 0;
-    public double rightMotorTempC = 0;
+    public double motorAppliedVolts = 0;
+    public double motorCurrentAmps = 0;
+    public double motorTempC = 0;
   }
 
   /** Updates the set of loggable inputs */
-  public default void updateInputs(AlgaeArmIOInputs inputs) {}
+  public default void updateInputs(WristIOInputs inputs) {}
 
   /** Run open loop at the specified voltage. */
   public default void setVoltage(double voltage) {}
